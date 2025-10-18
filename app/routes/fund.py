@@ -6,11 +6,67 @@ from flask import g
 from flask_login import login_required
 
 
+# rebuild_FundVars from Cloud Run response
+def rebuild_FundVars(resp, form):
+    """
+    Rebuilds a FundVars-like object from the JSON response returned by Cloud Run.
+    Safely handles nested DataFrames, SVGs, and html_vars, and reconstructs a form object.
+    """
+    from types import SimpleNamespace
+    import pandas as pd
+
+    data = resp.json()
+    res = SimpleNamespace()
+
+    # --- Helper: safely decode DataFrame or leave plain value ---
+    def safe_read_json(obj):
+        if isinstance(obj, str):
+            try:
+                return pd.read_json(obj)
+            except ValueError:
+                return obj
+        return obj
+
+    # --- Core FundVars reconstruction ---
+    res.summary = safe_read_json(data.get("summary"))
+    res.df = safe_read_json(data.get("df"))
+    res.metrics_descriptions = data.get("metrics_descriptions", {})
+    res.s_fund = data.get("s_fund", {})
+
+    # --- What-if DataFrames ---
+    res.whatif_dfs = {k: safe_read_json(v) for k, v in data.get("whatif_dfs", {}).items()}
+
+    # --- Inputs ---
+    res.inputs = data.get("inputs", {})
+
+    # --- html_vars reconstruction ---
+    html_vars_raw = data.get("html_vars", {})
+    html_vars = {}
+
+    for k, v in html_vars_raw.items():
+        if isinstance(v, str):
+            if v.strip().startswith("<svg"):
+                html_vars[k] = v
+            else:
+                try:
+                    html_vars[k] = pd.read_json(v)
+                except Exception:
+                    html_vars[k] = v
+        else:
+            html_vars[k] = v
+
+    html_vars["form"] = form
+
+    res.html_vars = html_vars
+    return res
+
+
 @app.route('/fund', methods=['GET', 'POST'])
 @login_required
 def fund_page():
     form = create_investment_parameters_form(groups=['base', 'fund'])
     return render_calc_page(
+        rebuilder = rebuild_FundVars,
         form = form,
         calc_name = 'fund',
         ip = get_client_ip(app),

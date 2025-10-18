@@ -14,7 +14,7 @@ def invalid_data_submitted_check(form, calc_name, ip):
             return True
         return False
 
-def render_calc_page(form, calc_name, ip, html_file, cache_name,
+def render_calc_page(rebuilder, form, calc_name, ip, html_file, cache_name,
     falsk_g, global_vars):
 
     falsk_g = falsk_g.__dict__
@@ -49,7 +49,7 @@ def render_calc_page(form, calc_name, ip, html_file, cache_name,
                 timeout=10
             )
             print(resp)
-            res = rebuild_FundVars(resp, form)
+            res = rebuilder(resp, form)
             print(res)
 
             page = render_template(html_file, **res.html_vars)
@@ -64,55 +64,3 @@ def render_calc_page(form, calc_name, ip, html_file, cache_name,
         return render_template(html_file, title='Home', form=form, data = None)
 
 
-def rebuild_FundVars(resp, form):
-    """
-    Rebuilds a FundVars-like object from the JSON response returned by Cloud Run.
-    Safely handles nested DataFrames, SVGs, and html_vars, and reconstructs a form object.
-    """
-    from types import SimpleNamespace
-    import pandas as pd
-
-    data = resp.json()
-    res = SimpleNamespace()
-
-    # --- Helper: safely decode DataFrame or leave plain value ---
-    def safe_read_json(obj):
-        if isinstance(obj, str):
-            try:
-                return pd.read_json(obj)
-            except ValueError:
-                return obj
-        return obj
-
-    # --- Core FundVars reconstruction ---
-    res.summary = safe_read_json(data.get("summary"))
-    res.df = safe_read_json(data.get("df"))
-    res.metrics_descriptions = data.get("metrics_descriptions", {})
-    res.s_fund = data.get("s_fund", {})
-
-    # --- What-if DataFrames ---
-    res.whatif_dfs = {k: safe_read_json(v) for k, v in data.get("whatif_dfs", {}).items()}
-
-    # --- Inputs ---
-    res.inputs = data.get("inputs", {})
-
-    # --- html_vars reconstruction ---
-    html_vars_raw = data.get("html_vars", {})
-    html_vars = {}
-
-    for k, v in html_vars_raw.items():
-        if isinstance(v, str):
-            if v.strip().startswith("<svg"):
-                html_vars[k] = v
-            else:
-                try:
-                    html_vars[k] = pd.read_json(v)
-                except Exception:
-                    html_vars[k] = v
-        else:
-            html_vars[k] = v
-
-    html_vars["form"] = form
-
-    res.html_vars = html_vars
-    return res
