@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import 'macros/form.html' as form_macros %}
+
+{% block app_content %}
+    <h2>Calculate buying vs renting your home</h2>
+    <br>
+    {% include g.intro %}
+    <br>
+    {{ form_macros.calc_form(form) }}
+    <br>
+    
+    {% if data is not none %}
+        <script>
+            document.location.hash = '#answer';
+        </script>
+        <div id = "answer">
+        <br>
+        <br>
+        <br>
+        <h3>ANSWER: The returns are higher if you <b>{{ rent_or_buy }}</b> your home!</h3>
+        <div>
+        <br>   
+        {{ data.to_html(classes="table") | safe}}
+
+        <br>
+
+        <div class = 'descriptions'>
+            {% include g.in_plain_english %}
+            <br>
+            <br>
+            <h3>Click or scroll to see more about your results...</h3>
+            <ul>
+                <li><a href="#metric-desc">What do these metrics mean?...</a></li>
+                <li><a href="#whatif">'What if' Analysis...</a></li>
+                <li><a href="#invmodel">Investment Model - {{ dataframe_name }}...</a></li>
+            </ul>
+            <h3 id="metric-desc" class="anchor">What do these metrics mean?</h3>
+            <ul>
+            {% for label, description in metrics %}
+                <li><b>{{label}}</b> - {{description}}<br></li>
+            {% endfor %}
+            </ul>
+    	</div>
+        <h3 id="whatif" class="anchor">'What if' Analysis</h3>
+        {% include g.whatif_intro %}
+        <br>
+        <h4>What if property growth was different?</h4>
+        <div style="text-align: center">{{ property_growth_whatif_plot|safe }}</div><br><br>
+        <h4>What if mortgage rate was different?</h4>
+        <div style="text-align: center">{{ mortgage_rate_whatif_plot|safe }}</div><br><br>
+        <h4>What if running cost was different?</h4>
+        <div style="text-align: center">{{ annual_running_cost_perc_whatif_plot|safe }}</div><br><br>
+        <h4>What if buying cost was different?</h4>
+        <div style="text-align: center">{{ buying_costs_whatif_plot|safe }}</div><br><br>
+        {#<h4>What if rent was different to mortgage repayments?</h4>#}
+        <h3 id="invmodel" class="anchor">Investment Model - {{ dataframe_name }}</h3>
+        {% include g.full_model_description %}
+        {{ dataframe.to_html(classes="table table-striped") | safe}}
+    {% else %}
+    {% endif %}
+    <br>
+    <br>
+
+{% endblock %}

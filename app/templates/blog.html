@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+
+<!-- Header -->
+<div style="color:#fff!important;background-color:#f44336!important;text-align:center!important" class="jumbotron red">
+  <h1>Blog</h1>
+  <p>Learn what you need to know about calculating investments.</p>
+</div>
+
+<!-- First Grid -->
+<a style="color:inherit;text-decoration: none;" href="/blog/buy-vs-rent">
+	<div class="row">
+	    <div class="col-sm-8">
+	      <h1>Buying vs renting your home</h1>
+	      <br>
+	      <h5>The option you choose depends on your circumstances. Use this guide to help you calculate which option is better.</h5>
+	      <br>
+	      <p>It’s a decision nearly everyone will make in their lives at least once - “Do I buy my home or rent it?” Quite often this conversation goes: “Rent money is dead money.” but there’s a lot more to the story than that. Those who rent often argue that owning a property is just too expensive and they may choose to put their extra savings into other investments. Furthermore not many people talk about the additional costs with owning a home...</p>
+	    </div>
+
+	    <div class="col-sm-4">
+	    	<img src="{{url_for('static', filename='blog/house.svg')}}" >
+	    </div>
+	</div>
+</a>
+
+<!-- Second Grid -->
+{#<a style="color:inherit;text-decoration: none;" href="/blog/buy-vs-rent">
+	<div style="background-color:#f1f1f1!important" class="row">
+		<div class="col-sm-4">
+	    	<img src="{{url_for('static', filename='blog/house.svg')}}" >
+	    </div>
+	    <div class="col-sm-8">
+	      <h1>Buying vs renting your home</h1>
+	      <br>
+	      <h5>The option you choose depends on your circumstances. Use this guide to help you calculate which option is better.</h5>
+	      <br>
+	      <p>It’s a decision nearly everyone will make in their lives at least once - “Do I buy my home or rent it?” Quite often this conversation goes: “Rent money is dead money.” but there’s a lot more to the story than that. Those who rent often argue that owning a property is just too expensive and they may choose to put their extra savings into other investments. Furthermore not many people talk about the additional costs with owning a home...</p>
+	    </div>
+	</div>
+</a>#}
+
+{% endblock %}

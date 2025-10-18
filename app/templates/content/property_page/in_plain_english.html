@@ -1,0 +1,21 @@
+<h3 id="in-plain-english-investment-buy-home-vs-rent">In plain English</h3>
+<p>If:</p>
+<ul>
+<li>You invest <b>${{ capital }}</b> as a deposit for your home that you purchased for <b>${{ property_cost }}</b> at mortgage rate <b>{{ mortgage_rate }}%</b> over <b>{{ mortgage_years }}</b> years and,</li>
+<li>During the <b>{{ years }}</b> years you own it, it had annual growth <b>{{ property_growth }}%</b> and,</li>
+<li>You had the above associated costs with this property,</li>
+</ul>
+<p>Then:</p>
+<ul>
+
+{% if payback_period is not none %}
+<li>It would take <b>{{ payback_period_words }}</b> for you to break even on this investment - i.e. have all your capital returned for selling the property while accounting for all costs (excluding taxes).</li>
+{% else %}
+<li>You would lose money on this investment when accounting for all costs (excluding taxes).</li>
+{% endif %}
+
+<li>Your initial investment (<b>${{ capital }}</b>) when you sell the home after <b>{{ years }}</b> years will have increased to: $<b>{{ balance }}</b>, which has an increase (return on investment) of <b>{{ roi_buy }}%</b>.</li>
+<li>If instead you had rented and invested this capital elsewhere to achieve <b>{{ non_home_returns }}%</b> annual returns, then you would have an increase (return on investment) of <b>{{ roi_rent }}%</b>.</li>
+<li>Hence you would be <b>${{ balance_diff }}</b> better off <b>{{ rent_or_buy }}ing your home</b> (<b>{{ roi_diff }}%</b> in increase terms) after the <b>{{ years }}</b> years</b>.</li>
+</ul>
+(For reference, the monthly mortgage payments would be: <b>${{ monthly_repayment }}</b>, and the initial principal of the mortgage: <b>${{ principal }}</b>.)

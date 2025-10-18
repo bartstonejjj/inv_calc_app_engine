@@ -1,0 +1,25 @@
+{% macro calc_form(form) -%}    
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {% for f in form %}
+            {% if f.type != 'SubmitField' and f.type != 'CSRFTokenField' %}
+                <div class="form-group row">
+                    <div class="control-label col-sm-3">
+                        <label>{{f.label}}</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input class="form-control calc-field-input" id="{{f.id}}" name="{{f.name}}" type="text" value={{f.data}}>
+                    </div>
+                    <div class="help-block col-sm-6">
+                        <label><i>{{f.description}}</i></label>
+                    </div>
+                </div>
+                {% if f.errors %}
+                    <ul class="text-danger">{% for error in f.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        <br>
+        {{ form.submit(class="btn btn-primary btn-lg btn-block") }}
+    </form>
+{%- endmacro %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import 'macros/form.html' as form_macros %}
+
+{% block app_content %}
+    <h2>Calculate peer to peer investment</h2>
+    <br>
+    {% include g.intro %}
+    <br>
+    {{ form_macros.calc_form(form) }}
+    <br>
+    <br>
+
+    {% if data is not none %}   
+        <script>
+            document.location.hash = '#answer';
+        </script>
+        <div id = "answer">
+            <br>
+            <br>
+            <br>
+            <h3>Your results</h3>
+            <br>   
+            {{ data.to_html(classes="table") | safe}}
+        </div>
+
+    <br>
+    <div class = 'descriptions'>
+        {% include g.in_plain_english %}
+        <br>
+        <h3>What are these investments exactly?</h3>
+        <ul>
+        {% for label, description in investments %}
+			<li><b>{{label}}</b> - {{description}}<br></li>
+		{% endfor %}
+		</ul>
+        <br>
+        <h3>What do these metrics mean?</h3>
+        <ul>
+        {% for label, description in metrics %}
+			<li><b>{{label}}</b> - {{description}}<br></li>
+		{% endfor %}
+        </ul>
+        <br>
+	</div>
+    <br>
+    <h3>Investment Model - {{ dataframe_name }}</h3>
+    {% include g.full_model_description %}
+    <br>
+    {{ dataframe.to_html(classes="table table-striped") | safe}}
+    {% else %}
+    {% endif %}
+    <br>
+    <br>
+    
+{% endblock %}

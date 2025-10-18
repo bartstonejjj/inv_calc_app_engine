@@ -1,0 +1,38 @@
+runtime: python311
+env: standard
+instance_class: F4
+
+automatic_scaling:
+  min_instances: 0            # allow scale to zero
+  max_instances: 1
+  target_cpu_utilization: 0.8
+  target_throughput_utilization: 0.8
+  max_idle_instances: 1
+  min_pending_latency: 0.1s
+  max_pending_latency: 15s
+
+handlers:
+  - url: /static
+    static_dir: app/static
+
+  - url: /.*
+    script: auto
+    secure: always
+    redirect_http_response_code: 301
+
+env_variables:
+  APIKEY: "AIzaSyDbdhru7IPIGWanXr4-TI2l3I5eM5xfIV8"
+  AUTHDOMAIN: "inv-calc-gcp.firebaseapp.com"
+  DATABASEURL: "https://inv-calc-gcp.firebaseio.com"
+  DB_HOST: ""
+  DB_NAME: ""
+  DB_PASSWORD: ""
+  DB_USER: ""
+  FLASK_APP: "main.py"
+  MAIL_PASSWORD: "xzphgkbijazavwfj"
+  MAIL_PORT: 587
+  MAIL_SERVER: "smtp.googlemail.com"
+  MAIL_USE_TLS: "1"
+  MAIL_USERNAME: "invcalcsite@gmail.com"
+  SECRET_KEY: "3cd69192c610425281b83078f7084c56"
+  STORAGEBUCKET: "inv-calc-gcp.appspot.com"

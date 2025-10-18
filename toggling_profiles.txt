@@ -1,0 +1,76 @@
+If you have multiple Google Cloud Platform (GCP) projects and need to switch between them frequently to deploy different applications, you can use gcloud configurations to manage this efficiently. Here’s how you can set it up:
+
+Step-by-Step Guide
+1. Create Configurations for Each Project
+GCP allows you to create multiple configurations, each with its own settings, including the project ID. This makes it easy to switch between different projects.
+
+Create a New Configuration:
+sh
+Copy code
+gcloud config configurations create project1-config
+Set the Project for the Configuration:
+sh
+Copy code
+gcloud config set project PROJECT_ID_1
+Authenticate (if needed):
+sh
+Copy code
+gcloud auth activate-service-account --key-file=path/to/project1-service-account-key.json
+Repeat for the Second Project:
+sh
+Copy code
+gcloud config configurations create project2-config
+gcloud config set project PROJECT_ID_2
+gcloud auth activate-service-account --key-file=path/to/project2-service-account-key.json
+2. Switch Between Configurations
+When you need to switch between projects, you can simply activate the corresponding configuration.
+
+Activate a Configuration:
+sh
+Copy code
+gcloud config configurations activate project1-config
+# Deploy to project 1
+gcloud app deploy
+sh
+Copy code
+gcloud config configurations activate project2-config
+# Deploy to project 2
+gcloud app deploy
+3. List Configurations
+To see all your configurations, you can list them:
+
+sh
+Copy code
+gcloud config configurations list
+4. Check the Active Configuration
+To check which configuration is currently active:
+
+sh
+Copy code
+gcloud config configurations describe
+Additional Tips
+Environment Variables: You can use environment variables in your scripts to switch configurations dynamically.
+
+Alias Command: Create alias commands in your shell to switch configurations quickly. For example, in bash or zsh, you can add to your .bashrc or .zshrc:
+
+sh
+Copy code
+alias gcp1='gcloud config configurations activate project1-config'
+alias gcp2='gcloud config configurations activate project2-config'
+Then, you can switch by simply typing gcp1 or gcp2.
+
+Example Deployment Script
+Here’s an example of a script that switches configurations and deploys to the respective projects:
+
+sh
+Copy code
+#!/bin/bash
+
+# Deploy to Project 1
+gcloud config configurations activate project1-config
+gcloud app deploy path/to/your/project1/app.yaml
+
+# Deploy to Project 2
+gcloud config configurations activate project2-config
+gcloud app deploy path/to/your/project2/app.yaml
+By setting up configurations and using the gcloud command-line tool, you can seamlessly switch between multiple GCP projects and deploy your applications with ease.

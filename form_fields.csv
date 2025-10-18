@@ -1,0 +1,19 @@
+name,name_df,label,type,default,min,max,group,description
+capital,,Capital ($),IntegerField,10000,500,10000000,base,The amount of cash you wish to invest.
+years,,Years,IntegerField,5,1,50,base,The number of years you are willing to invest the capital.
+savings_rate,rate,Savings Rate (%),DecimalField,3,0.1,50,savings,The annual interest rate of monthly compound interest from your bank savings account (e.g. 3% p.a.)
+p2p_rate,p2p_rate,P2P Lending Rate (%),DecimalField,9,0.1,50,p2p,The annual interest rate received on a monthly basis when you loan cash for a fixed term with peer to peer lending (e.g. 9% p.a.)
+capital,capital,Capital ($),IntegerField,100000,500,10000000,property,The amount of cash you wish to invest - i.e. the amount of cash deposit for buying the property.
+years,sell_years,Years,IntegerField,10,1,50,property,The number of years you are willing to invest the capital - i.e. the number of years you will own the home.
+property_cost,property_cost,Property Cost,IntegerField,500000,500,10000000,property,The purchase price of the property.
+mortgage_rate,mortgage_rate,Mortgage Rate (%),DecimalField,4,0.1,50,property,The average mortgage rate expected over the life of the mortgage.
+mortgage_years,mortgage_years,Mortgage Years,IntegerField,25,1,50,property,The number of years of the mortgage.
+property_growth,property_growth,Estimated Property Growth (%),DecimalField,6,0.1,50,property,The estimated annual growth of the property over the period of time you own it.
+net_buying_cost,buying_costs,Net Buying Cost ($),IntegerField,35000,500,1000000,property,"The sum of all costs associated with buying a home (stamp duty, charges, fees etc) minus any grants or subsidies (e.g. first home owners grant)."
+fixed_selling_cost,fixed_selling_cost,Fixed Selling Cost ($),IntegerField,5000,500,1000000,property,The sum of all costs associated with selling a home (excluding sales commision).
+sales_commission,sales_commission,Sales Commission (%),DecimalField,3,0.1,50,property,The commission received by the sales agent for selling your property.
+annual_running_cost_perc,annual_running_cost_perc,Annual Running Cost (% of Property Value),DecimalField,5,0.1,50,property,"The sum of all costs (as a % of property value) for running a property (rates, repairs, maintenance, insurance etc.) that would not be costs for a typical renter."
+non_home_returns,non_home_returns,Annual Returns For Other Investments (%),DecimalField,9,0.1,50,property,"The returns estimated on the capital for the investments you make instead of investing in a home (e.g. stock market, bonds, superannuation, index fund)."
+earnings,earnings,Estimated Earnings (%),DecimalField,9,0.1,50,fund,The estimated annual growth of the fund (i.e. performance not including fees)
+mgmt_fee,mgmt_fee,Management Fee (%),DecimalField,1,0.1,50,fund,The annual management fee % for this fund (i.e. % of fund balance received by fund management).
+annual_fee,annual_fee,Other Fees ($),IntegerField,0,0,1000000,fund,Any other annual fees for this fund (i.e. sum of fixed fess that are not part of management fee).

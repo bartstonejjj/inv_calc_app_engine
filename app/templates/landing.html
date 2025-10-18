@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h2>Investment Calculator</h2>
+    <br>
+    {% include 'content/landing/intro.html' %}
+    <h4><a href="{{ url_for('index') }}">Learn more...</a><h4>
+    {% if current_user.is_anonymous %}
+        <br>
+        <div id='signup'>
+        <br>
+        <br>
+            <h3>Sign Up</h3>
+            {% if signup_error %}
+                <script>
+                    document.location.hash = '#signup';
+                </script>
+                {% if signup_error_message %}
+                    <div class="alert alert-warning">
+                        <p>{{ signup_error_message }}</p>
+                    </div>
+                {% endif %}
+            {% endif %}
+            <div class="row">
+                <div class="col-md-4">
+                    {{ wtf.quick_form(register_form) }}
+                </div>
+            </div>
+        </div>
+        <div id = "login">
+        <br>
+        <br>
+            <h3>Log In</h3>
+            {% if login_error %}
+                <script>
+                    document.location.hash = '#login';
+                </script>
+                <div class="alert alert-warning">
+                    {% if login_error_message %}
+                        <p>{{ login_error_message }}</p>
+                    {% endif %}
+                    <p>If you've forgotten your password, <a href="{{ url_for('reset_password_request') }}">click here</a> to reset it.</p>
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-4">
+                    {{ wtf.quick_form(login_form) }}
+                </div>
+            </div>
+            </p>
+            <a href="{{ url_for('reset_password_request') }}">Forgot password</a>
+        </div>
+        <br>
+    {% else %}
+        <br>
+        <ul>
+        <li><h4><a href="{{ url_for('property_page') }}">Calculate renting vs buying your home...</a></h4></li>
+        <li><h4><a href="{{ url_for('fund_page') }}">Calculate managed fund...</a></h4></li>
+        <li><h4><a href="{{ url_for('p2p_page') }}">Calculate peer to peer...</a></h4></li>
+        </ul>
+    {% endif %}
+    <br>
+
+    <img src="{{url_for('static', filename='landing.jpg')}}" class="center" style="display: block;margin-left:auto;margin-right:auto">
+    
+    <br>
+    {% include 'content/landing/what_is_investing.html' %}
+    <br>
+    {% include 'content/landing/what_are_the_questions_you_need_to_ask.html' %}
+{% endblock %}

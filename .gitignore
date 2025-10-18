@@ -1,0 +1,53 @@
+.env
+.env_dev_db
+.env_rds_db
+
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+__pycache__
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+venv
+app.db
+inv_calc.log*
+
+pyvenv.cfg
+env
+investment_models/.cache/v/cache/lastfailed
+investment_models/.DS_Store
+.DS_Store
+*.ipynb
+firebase_service_account_key.json
+.idea

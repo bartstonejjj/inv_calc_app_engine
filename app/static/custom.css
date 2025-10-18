@@ -1,0 +1,25 @@
+p, body {
+	line-height: 1.7;
+}
+div.descriptions {
+	line-height: 30px;
+}
+div.img-frame {
+	background:transparent;
+	padding:8px;
+	border:1px solid #999999; 
+}
+.calc-field-input{
+	margin-top:6px;
+}
+.row {
+	background: #f8f9fa;
+	margin-top: 20px;
+	padding:10px;
+}
+.navbar{
+	margin-bottom: 60px;
+}
+.anchor { 
+	padding-top: 60px; 
+}
