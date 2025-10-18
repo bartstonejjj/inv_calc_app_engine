@@ -14,8 +14,8 @@ def invalid_data_submitted_check(form, calc_name, ip):
             return True
         return False
 
-def render_calc_page(form, calc_name, ip, CalcVars, html_file, cache_name, html_vars,
-    falsk_g, global_vars, session_var = None, update_session_var = None):
+def render_calc_page(form, calc_name, ip, html_file, cache_name,
+    falsk_g, global_vars):
 
     falsk_g = falsk_g.__dict__
 
@@ -35,8 +35,6 @@ def render_calc_page(form, calc_name, ip, CalcVars, html_file, cache_name, html_
             return redirect(url_for('login_page'))
         # ----------------------------------------
 
-
-
         invalid_data_submitted = invalid_data_submitted_check(form, calc_name, ip)
 
         if form.validate_on_submit():
@@ -53,11 +51,6 @@ def render_calc_page(form, calc_name, ip, CalcVars, html_file, cache_name, html_
             print(resp)
             res = rebuild_FundVars(resp, form)
             print(res)
-            # res = CalcVars(form).run()
-
-            # if session_var and update_session_var:
-            #     session[session_var] = {}
-            #     update_session_var(res)
 
             page = render_template(html_file, **res.html_vars)
             app.cache.set(cache_name, page)
@@ -123,39 +116,3 @@ def rebuild_FundVars(resp, form):
 
     res.html_vars = html_vars
     return res
-
-
-class MockField:
-    def __init__(self, value, name=None):
-        self.data = value
-        self.name = name
-
-    def __call__(self, *args, **kwargs):
-        """Mimic WTForms field rendering (safe fallback)."""
-        class_attr = kwargs.get("class", "")
-        # If it's a submit button, render like a proper <button>
-        if isinstance(self.data, str) and self.name == "submit":
-            return f'<button type="submit" class="{class_attr}">{self.data}</button>'
-        # Otherwise just show value
-        return str(self.data)
-
-    def __str__(self):
-        return str(self.data)
-
-
-class MockForm:
-    def __init__(self, data_dict):
-        self.data = data_dict or {}
-        for k, v in self.data.items():
-            setattr(self, k, MockField(v, name=k))
-
-    def hidden_tag(self):
-        """Mimic Flask-WTF hidden_tag() macro call."""
-        return ""
-
-    def __iter__(self):
-        """Allow {% for f in form %} in Jinja."""
-        for name, value in self.data.items():
-            yield getattr(self, name)
-
-
