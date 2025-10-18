@@ -1,6 +1,7 @@
 from app import app
 from app.forms import create_investment_parameters_form
 from app.routes.lib import get_client_ip
+from app.routes.calc_lib import safe_read_json, get_html_vars
 from app.routes.calc_page_workflow import render_calc_page
 from flask import g
 from flask_login import login_required
@@ -13,19 +14,9 @@ def rebuild_FundVars(resp, form):
     Safely handles nested DataFrames, SVGs, and html_vars, and reconstructs a form object.
     """
     from types import SimpleNamespace
-    import pandas as pd
 
     data = resp.json()
     res = SimpleNamespace()
-
-    # --- Helper: safely decode DataFrame or leave plain value ---
-    def safe_read_json(obj):
-        if isinstance(obj, str):
-            try:
-                return pd.read_json(obj)
-            except ValueError:
-                return obj
-        return obj
 
     # --- Core FundVars reconstruction ---
     res.summary = safe_read_json(data.get("summary"))
@@ -39,25 +30,7 @@ def rebuild_FundVars(resp, form):
     # --- Inputs ---
     res.inputs = data.get("inputs", {})
 
-    # --- html_vars reconstruction ---
-    html_vars_raw = data.get("html_vars", {})
-    html_vars = {}
-
-    for k, v in html_vars_raw.items():
-        if isinstance(v, str):
-            if v.strip().startswith("<svg"):
-                html_vars[k] = v
-            else:
-                try:
-                    html_vars[k] = pd.read_json(v)
-                except Exception:
-                    html_vars[k] = v
-        else:
-            html_vars[k] = v
-
-    html_vars["form"] = form
-
-    res.html_vars = html_vars
+    res.html_vars = get_html_vars(data, form)
     return res
 
 
