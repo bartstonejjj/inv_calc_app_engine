@@ -48,9 +48,57 @@ def render_calc_page(rebuilder, form, calc_name, ip, html_file, cache_name,
                 headers={"Content-Type": "application/json"},
                 timeout=10
             )
-            print(resp)
+            print(resp.__dict__.keys())
             res = rebuilder(resp, form)
-            print(res)
+            print(res.__dict__.keys())
+            print(res.html_vars.keys())
+            print(res.html_vars['dataframe'])
+            res.html_vars['dataframe'] = {
+                "headers": [
+                    ["Month"],
+                    [["Fund", "Zero fee earnings"], ["Fund", "Accumulated effect of fees"], ["Fund", "Balance net of fees"]],
+                    [["Investment", "Final investment value"], ["Investment", "Investment increase (%)"], ["Investment", "Compound interest (%)"]]
+                ],
+                "rows": [
+                    [
+                        1,
+                        "10.1k",
+                        6,
+                        "10.1k",
+                        "10.1k",
+                        0.66,
+                        7.92,
+                    ],
+                    [
+                        2,
+                        "10.1k",
+                        12,
+                        "10.1k",
+                        "10.1k",
+                        1.32,
+                        7.89,
+                    ],
+                    [
+                        2,
+                        "10.1k",
+                        12,
+                        "10.1k",
+                        "10.1k",
+                        1.32,
+                        7.89,
+                    ],
+                    [
+                        2,
+                        "10.1k",
+                        12,
+                        "10.1k",
+                        "10.1k",
+                        1.32,
+                        7.89,
+                    ],
+                ]
+            }
+
 
             page = render_template(html_file, **res.html_vars)
             app.cache.set(cache_name, page)
