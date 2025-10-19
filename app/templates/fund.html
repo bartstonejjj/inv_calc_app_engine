@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
 {% import 'macros/form.html' as form_macros %}
+{% from 'macros/table.html' import render_table %}
 
 {% block app_content %}
     <h2>Calculate fund investment</h2>
@@ -20,8 +21,8 @@
             <br>
             <br>
             <h3>Your results</h3>
-            <br>   
-            {{ data.to_html(classes="table") | safe}}
+            <br>
+            {{ render_table(data, classes="table") | safe}}
         </div>
 
         <br>
@@ -57,10 +58,10 @@
         <h3 id="invmodel" class="anchor">Investment Model - {{ dataframe_name }}</h3>
         {% include g.full_model_description %}
         <br>
-        {{ dataframe.to_html(classes="table table-striped") | safe}}
+        {{ render_table(dataframe, classes="table table-striped") | safe}}
     {% else %}
     {% endif %}
     <br>
     <br>
-    
+
 {% endblock %}
