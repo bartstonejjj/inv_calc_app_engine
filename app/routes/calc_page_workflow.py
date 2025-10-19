@@ -14,6 +14,70 @@ def invalid_data_submitted_check(form, calc_name, ip):
             return True
         return False
 
+
+import ast
+
+def group_headers(flat_headers):
+    grouped = []
+    current_group = None
+    current_items = []
+
+    for g, s in flat_headers:
+        # Handle standalone headers (no subgroup)
+        if not g or not s:
+            # flush any open group
+            if current_items:
+                grouped.append(current_items)
+                current_items = []
+            grouped.append([g or s])
+            current_group = None
+            continue
+
+        # New group encountered
+        if g != current_group:
+            if current_items:
+                grouped.append(current_items)
+            current_group = g
+            current_items = []
+
+        current_items.append([g, s])
+
+    # Add any remaining group
+    if current_items:
+        grouped.append(current_items)
+
+    return grouped
+
+
+# used for big_table rendering
+def convert_dataframe_var(data):
+    # Parse tuple-like keys into real tuples
+    parsed = []
+    for k, v in data.items():
+        try:
+            key = list(ast.literal_eval(k))
+        except Exception:
+            key = [k]
+        parsed.append((key, v))
+
+    # Build headers (list of lists) (get rid of empty column names to force merged cells)
+    raw_headers = [key for key, _ in parsed]
+    headers = group_headers(raw_headers)
+
+    # Determine all row indices (whatever the inner dict keys are)
+    all_indices = sorted({int(i) for _, vals in parsed for i in vals.keys()})
+
+    # Build rows (list of lists)
+    rows = []
+    for i in all_indices:
+        row = []
+        for _, vals in parsed:
+            row.append(vals.get(str(i)))
+        rows.append(row)
+
+    return {"headers": headers, "rows": rows}
+
+
 def render_calc_page(rebuilder, form, calc_name, ip, html_file, cache_name,
     falsk_g, global_vars):
 
@@ -48,57 +112,9 @@ def render_calc_page(rebuilder, form, calc_name, ip, html_file, cache_name,
                 headers={"Content-Type": "application/json"},
                 timeout=10
             )
-            print(resp.__dict__.keys())
             res = rebuilder(resp, form)
-            print(res.__dict__.keys())
-            print(res.html_vars.keys())
-            print(res.html_vars['dataframe'])
-            res.html_vars['dataframe'] = {
-                "headers": [
-                    ["Month"],
-                    [["Fund", "Zero fee earnings"], ["Fund", "Accumulated effect of fees"], ["Fund", "Balance net of fees"]],
-                    [["Investment", "Final investment value"], ["Investment", "Investment increase (%)"], ["Investment", "Compound interest (%)"]]
-                ],
-                "rows": [
-                    [
-                        1,
-                        "10.1k",
-                        6,
-                        "10.1k",
-                        "10.1k",
-                        0.66,
-                        7.92,
-                    ],
-                    [
-                        2,
-                        "10.1k",
-                        12,
-                        "10.1k",
-                        "10.1k",
-                        1.32,
-                        7.89,
-                    ],
-                    [
-                        2,
-                        "10.1k",
-                        12,
-                        "10.1k",
-                        "10.1k",
-                        1.32,
-                        7.89,
-                    ],
-                    [
-                        2,
-                        "10.1k",
-                        12,
-                        "10.1k",
-                        "10.1k",
-                        1.32,
-                        7.89,
-                    ],
-                ]
-            }
 
+            res.html_vars['dataframe'] = convert_dataframe_var(res.html_vars['dataframe'])
 
             page = render_template(html_file, **res.html_vars)
             app.cache.set(cache_name, page)
