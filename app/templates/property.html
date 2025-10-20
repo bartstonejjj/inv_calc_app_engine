@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
 {% import 'macros/form.html' as form_macros %}
+{% from 'macros/table.html' import render_table %}
+{% from 'macros/big_table.html' import render_big_table %}
 
 {% block app_content %}
     <h2>Calculate buying vs renting your home</h2>
@@ -21,7 +23,7 @@
         <h3>ANSWER: The returns are higher if you <b>{{ rent_or_buy }}</b> your home!</h3>
         <div>
         <br>   
-        {{ data.to_html(classes="table") | safe}}
+        {{ render_table(data, classes="table") | safe}}
 
         <br>
 
@@ -56,7 +58,7 @@
         {#<h4>What if rent was different to mortgage repayments?</h4>#}
         <h3 id="invmodel" class="anchor">Investment Model - {{ dataframe_name }}</h3>
         {% include g.full_model_description %}
-        {{ dataframe.to_html(classes="table table-striped") | safe}}
+        {{ render_big_table(dataframe) | safe}}
     {% else %}
     {% endif %}
     <br>
