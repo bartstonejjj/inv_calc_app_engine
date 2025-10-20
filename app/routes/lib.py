@@ -1,5 +1,4 @@
 from app import app, db
-import pandas as pd
 import itertools
 from flask import g, url_for, request, redirect
 from urllib.parse import urlparse
@@ -68,7 +67,3 @@ def get_client_ip(app):
         else:
             return request.remote_addr
     pass
-
-def get_model_labels(group):
-    df = pd.read_csv('form_fields.csv', usecols = ['group','name_df','label'])
-    return df[df['group'] == group][['name_df', 'label']].set_index('name_df').to_dict()['label']

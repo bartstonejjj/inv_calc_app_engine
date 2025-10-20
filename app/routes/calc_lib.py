@@ -1,5 +1,4 @@
 import json
-import pandas as pd
 
 
 # --- Helper: safely decode DataFrame or leave plain value ---
