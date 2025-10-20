@@ -18,7 +18,6 @@ def safe_read_json(obj):
     return obj
 
 
-
 def decode_if_json(obj):
     if isinstance(obj, str):
         try:
@@ -27,9 +26,6 @@ def decode_if_json(obj):
             return obj
     return obj
 
-
-# --- html_vars reconstruction ---
-import json
 
 def get_html_vars(data, form):
     """
@@ -61,3 +57,17 @@ def get_html_vars(data, form):
     # Attach form for template rendering
     html_vars["form"] = form
     return html_vars
+
+
+def rebuild_CalcVars(resp, form):
+    """
+    Rebuilds a FundVars-like object from the JSON response returned by Cloud Run.
+    Safely handles nested DataFrames, SVGs, and html_vars, and reconstructs a form object.
+    """
+    from types import SimpleNamespace
+
+    data = resp.json()
+    res = SimpleNamespace()
+
+    res.html_vars = get_html_vars(data, form)
+    return res
