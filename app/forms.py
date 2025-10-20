@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 import wtforms.fields #Imported here so that I can call input fields dynamically from csv e.g. DecimalField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 #from app.models import User
-import pandas as pd
+import csv
 
 
 class LoginForm(FlaskForm):
@@ -33,21 +33,33 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField('Request Password Reset')
 
 
+def min_max_validator(max, min=0):
+    return NumberRange(min=min, max=max,
+                       message='Please enter a number greater than {} and less than {}.'.format(min, max))
+
+
 def create_investment_parameters_form(groups):
-    def min_max_validator(max, min = 0):
-        return NumberRange(min = min, max = max, 
-            message = 'Please enter a number greater than {} and less than {}.'.format(min, max))
-
     class InvestmentParametersForm(FlaskForm):
+        rows = []
 
-        # Read in form field details and create fields
-        df = pd.read_csv('form_fields.csv') 
-        df = df[df['group'].isin(groups)]
-        df = df.drop_duplicates(subset = ['name'], keep = 'last') # Override base fields if needed
-        for i, row in df.iterrows():
-            locals()[row['name']] = getattr(wtforms.fields, row['type'])(row['label'], default = row['default'], 
-                description = row['description'],
-                validators = [min_max_validator(max = row['max'], min = row['min'])])
+        # 1️⃣ Read CSV manually
+        with open('form_fields.csv', newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row.get('group') in groups:
+                    rows.append(row)
+
+        # 2️⃣ Remove duplicates by 'name', keeping the last one
+        unique_rows = {}
+        for row in rows:
+            unique_rows[row['name']] = row  # later rows overwrite earlier ones
+        rows = list(unique_rows.values())
+        print(row)
+
+        # 3️⃣ Dynamically create WTForm fields
+        for row in rows:
+            locals()[row['name']] = getattr(wtforms.fields, row['type'])(row['label'], default=row['default'],
+                description=row['description'], validators=[min_max_validator(max=float(row['max']), min=float(row['min']))])
 
         submit = SubmitField('Calculate')
 
