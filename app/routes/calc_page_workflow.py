@@ -78,7 +78,7 @@ def convert_dataframe_var(data):
     return {"headers": headers, "rows": rows}
 
 
-def render_calc_page(rebuilder, form, calc_name, ip, html_file, cache_name,
+def render_calc_page(cloud_run_route, rebuilder, form, calc_name, ip, html_file, cache_name,
     falsk_g, global_vars):
 
     falsk_g = falsk_g.__dict__
@@ -107,7 +107,7 @@ def render_calc_page(rebuilder, form, calc_name, ip, html_file, cache_name,
             # Calculate investment and return variables
             payload = {"form_data": form.data}
             resp = requests.post(
-                "http://127.0.0.1:5001/calc_fund",
+                f"http://127.0.0.1:5001/{cloud_run_route}",
                 data=json.dumps(payload, use_decimal=True),
                 headers={"Content-Type": "application/json"},
                 timeout=10

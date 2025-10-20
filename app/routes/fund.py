@@ -39,6 +39,7 @@ def rebuild_FundVars(resp, form):
 def fund_page():
     form = create_investment_parameters_form(groups=['base', 'fund'])
     return render_calc_page(
+        cloud_run_route = 'calc_fund',
         rebuilder = rebuild_FundVars,
         form = form,
         calc_name = 'fund',
