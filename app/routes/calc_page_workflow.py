@@ -1,11 +1,13 @@
 from app import app
-from app.forms import create_investment_parameters_form
-from app.routes.lib import add_calc_record, load_global_vars
+from app.routes.lib import add_calc_record
 from app.routes.guest_user_manager import guest_login_allowed, is_guest_user
-from flask import g, render_template, session, redirect, url_for
+from flask import g, render_template, redirect, url_for
 from flask_login import logout_user
 import requests
 import simplejson as json
+import ast
+from app.routes.calc_lib import rebuild_CalcVars
+
 
 def invalid_data_submitted_check(form, calc_name, ip):
     with app.app_context():
@@ -14,8 +16,6 @@ def invalid_data_submitted_check(form, calc_name, ip):
             return True
         return False
 
-
-import ast
 
 def group_headers(flat_headers):
     grouped = []
@@ -78,7 +78,7 @@ def convert_dataframe_var(data):
     return {"headers": headers, "rows": rows}
 
 
-def render_calc_page(cloud_run_route, rebuilder, form, calc_name, ip, html_file, cache_name,
+def render_calc_page(cloud_run_route, form, calc_name, ip, html_file, cache_name,
     falsk_g, global_vars):
 
     falsk_g = falsk_g.__dict__
@@ -112,7 +112,7 @@ def render_calc_page(cloud_run_route, rebuilder, form, calc_name, ip, html_file,
                 headers={"Content-Type": "application/json"},
                 timeout=10
             )
-            res = rebuilder(resp, form)
+            res = rebuild_CalcVars(resp, form)
 
             res.html_vars['dataframe'] = convert_dataframe_var(res.html_vars['dataframe'])
 
