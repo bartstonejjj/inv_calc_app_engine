@@ -1,8 +1,0 @@
-label,description,group
-Payback period (years),The number of years it takes for the capital to be returned so that you break even.,base
-Final investment value,"The final value of the investment at the end of the period (which includes any fees/costs/debts with buying/selling/owning it, but not taxes/inflation).",cash
-Investment increase (%),The % by which the capital has increased (to final investment value) by the end of the period. Sometimes called Return on Investent or Rate of Return.,cash
-Compound interest (%),"The equivalent compound interest rate (annual, compounded monthly) that would be required for the capital to reach final investment balance by the end of the investment period. This is equivalent to a savings account with a monthly compound period rather than annual (e.g. annual returns/growth).",cash
-Final investment value (non-liquid),Similar to 'Final investment value' (except for non-liquid investment - i.e. hasn't been sold yet as it can't be easily turned into cash),asset
-Investment increase (non-liquid) (%),Similar to 'Investment increase (%)'....,asset
-Compound interest (non-liquid) (%),Similar to 'Compound interest'....,asset

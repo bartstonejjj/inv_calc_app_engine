@@ -1,5 +1,0 @@
-label,description,group
-Savings Account,A standard savings account with monthly compound interest.,p2p
-P2P reinvest into savings,A peer to peer loan asset where the monthly repayments are invested into a savings account.,p2p
-P2P reinvest into P2P,A peer to peer loan asset where the monthly repayments are invested into more peer to peer loan assets.,p2p
-P2P with no reinvest,A peer to peer loan asset where there are no reinvestments of the monthly repayments. (This is not recommended but included for comparison.),p2p
