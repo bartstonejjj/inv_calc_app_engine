@@ -1,4 +1,4 @@
-from app import app
+from app import app, Config
 from app.routes.lib import add_calc_record
 from app.routes.guest_user_manager import guest_login_allowed, is_guest_user
 from flask import g, render_template, redirect, url_for
@@ -107,11 +107,12 @@ def render_calc_page(cloud_run_route, form, calc_name, ip, html_file, cache_name
             # Calculate investment and return variables
             payload = {"form_data": form.data}
             resp = requests.post(
-                f"http://127.0.0.1:5001/{cloud_run_route}",
+                f"{Config.CLOUD_RUN_URL}/{cloud_run_route}",
                 data=json.dumps(payload, use_decimal=True),
-                headers={"Content-Type": "application/json"},
+                headers={"Content-Type": "application/json", "X-API-Key":Config.CLOUD_RUN_KEY},
                 timeout=10
             )
+            print('resp', resp)
             res = rebuild_CalcVars(resp, form)
 
             res.html_vars['dataframe'] = convert_dataframe_var(res.html_vars['dataframe'])

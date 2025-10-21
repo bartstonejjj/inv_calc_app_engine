@@ -16,3 +16,7 @@ class Config(object):
     PROJECT_ID = 'inv-calc-gcp'
 
     CACHE_TYPE = "simple" # Flask-Caching related configs
+
+    CLOUD_RUN_KEY = '2498fhijwfnjkf8934quhdsjkbsd40woawrgkjnfsjweaf09rohawfjafjkjfdskj'
+    CLOUD_RUN_URL = 'https://inv-calc-cloud-run-7jm66aytua-ts.a.run.app'
+    # CLOUD_RUN_URL = 'http://127.0.0.1:5001' # local use only

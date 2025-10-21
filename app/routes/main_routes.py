@@ -182,3 +182,18 @@ def reset_password(token):
         flash('Your password has been reset!')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
+
+
+import os, psutil
+
+@app.route("/debug/memory")
+def memory_usage():
+    process = psutil.Process(os.getpid())
+    mem_info = process.memory_info()
+    rss_mb = mem_info.rss / (1024 ** 2)
+    vms_mb = mem_info.vms / (1024 ** 2)
+    return {
+        "pid": process.pid,
+        "rss_MB": round(rss_mb, 2),
+        "vms_MB": round(vms_mb, 2),
+    }
